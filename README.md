@@ -90,7 +90,11 @@ Export writes `{ app: 'uke-flashcards', exportedAt, flashcards, calibration }`. 
 
 ## Google Cloud
 
-The OAuth client (`CLIENT_ID` in `sync/account.js`) is a Web application client in the dancey.net project, with authorized JavaScript origin `http://localhost:8001` and scopes `drive.appdata`, `openid` and `userinfo.email`. Publishing needs the site's origin added there, the consent screen moved from *Testing* to *In production*, and brand verification: dancey.net verified in Google Search Console, a homepage titled dancey.net, and this privacy policy.
+The OAuth client (`CLIENT_ID` in `sync/account.js`) is a Web application client in the dancey.net project, with authorized JavaScript origin `http://localhost:8001` and scopes `drive.appdata`, `openid` and `userinfo.email`. Publishing needs the site's origin added there and the consent screen moved from *Testing* to *In production*. Brand verification (the domain verified in Google Search Console, a homepage carrying the app name, and this privacy policy) is optional with these scopes; it adds the app name and logo to the consent screen, which otherwise names the site's domain.
+
+## Licence
+
+The code is licensed under the GNU General Public License, version 3 or later (`LICENSE`). Files under `data/` and `fonts/` keep their own licences: the chord chain CC BY-NC 4.0, the fingerings MIT, the fonts OFL and the Ubuntu Font Licence.
 
 ## References
 
