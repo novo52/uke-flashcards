@@ -17,7 +17,7 @@ const MARKUP = `
       <button id="deleteRemote" title="Removes this site's files from your Google Drive and disconnects">Delete my data from Google Drive</button>
       <hr>
       <button id="exportData" title="Download your flashcard progress and calibration">Export data (JSON)</button>
-      <button id="importData" title="Replace your data with an exported file, or a uke app progress file">Import data (JSON)</button>
+      <button id="importData" title="Replace your data with an exported file">Import data (JSON)</button>
       <input id="importFile" type="file" accept=".json,application/json" hidden>
     </div>
   </details>`;

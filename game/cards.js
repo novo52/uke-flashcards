@@ -14,7 +14,7 @@
 //   lesson contains it.
 // - Lessons are phrases generated as keybr generates words: a walk over an
 //   order-4 chain (three chords predict the next) counted from real songs
-//   (public/data/chord-chain.json, from Chordonomicon; see
+//   (data/chord-chain.json, from Chordonomicon; see
 //   tools/build-chord-chain.mjs), keeping only unlocked chords. Changes come up
 //   in proportion to how often songs make them; a context with no unlocked
 //   continuation backs off to a shorter one.
@@ -336,49 +336,10 @@ export class Deck {
   }
 }
 
-// Progress lives in the browser and in progress/flashcards.json on the server;
-// loading takes whichever has the higher revision.
-const LOCAL_KEY = 'uke.flashcards.v2';
-const V1_KEY = 'uke.flashcards.v1';
-const SERVER_PATH = 'api/progress/flashcards';
-
-export const serverStore = {
-  async load() {
-    let local = null;
-    try {
-      local = JSON.parse(localStorage.getItem(LOCAL_KEY));
-      if (!local) {
-        const v1 = JSON.parse(localStorage.getItem(V1_KEY));
-        if (v1) local = migrateV1(v1);
-      }
-    } catch {
-      // Browser storage unavailable.
-    }
-    let remote = null;
-    try {
-      const res = await fetch(SERVER_PATH, { cache: 'no-store' });
-      if (res.ok) remote = await res.json();
-    } catch {
-      // Server unreachable: the browser copy is used.
-    }
-    return (remote?.revision ?? -1) > (local?.revision ?? -1) ? remote : local;
-  },
-  async save(data, { replace = false } = {}) {
-    try {
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
-    } catch {
-      // The server copy still holds it.
-    }
-    const res = await fetch(`${SERVER_PATH}${replace ? '?replace=1' : ''}`, { method: 'PUT', body: JSON.stringify(data) });
-    if (!res.ok) throw new Error(`progress not saved on the server (${res.status})`);
-  },
-};
-
 export class CardMode {
-  // `store`: { load(), save(data, { replace }) }; tests pass one that keeps
-  // progress in memory.
-  constructor({ els, clock, ensureAudio, logEvent, setStatus, store = serverStore }) {
-    Object.assign(this, { els, clock, ensureAudio, logEvent, setStatus, store });
+  // `store`: { load(), save(data, { replace }) }, where the progress is kept.
+  constructor({ els, clock, ensureAudio, setStatus, store }) {
+    Object.assign(this, { els, clock, ensureAudio, setStatus, store });
     this.deck = new Deck();
     const chain = fetch('data/chord-chain.json')
       .then((res) => res.json())
@@ -532,7 +493,6 @@ export class CardMode {
     const name = this.current;
     const time = r.lastAttack === null ? null : strum.t - r.lastAttack;
     r.steps.push({ name, time, miss: r.missed });
-    this.logEvent({ type: 'flashcard', chord: name, time, miss: r.missed });
     r.start ??= strum.t;
     r.lastAttack = strum.t;
     r.previous = name;

@@ -47,7 +47,7 @@ export function exportData() {
 
 const isProgress = (p) => p && typeof p.chords === 'object' && Array.isArray(p.unlocked);
 
-// Reads an export, or a bare flashcard progress file (the uke app's progress/flashcards.json, in either format). Returns { flashcards, calibration, summary } with null for what the file lacks, or null when it holds neither.
+// Reads an export, or a bare flashcard progress file (format version 1 or 2). Returns { flashcards, calibration, summary } with null for what the file lacks, or null when it holds neither.
 export function parseImport(text) {
   let data;
   try { data = JSON.parse(text); } catch { return null; }

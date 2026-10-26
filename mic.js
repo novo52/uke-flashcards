@@ -41,7 +41,7 @@ export class Microphone {
         numberOfInputs: 1,
         numberOfOutputs: 1,
         outputChannelCount: [1],
-        processorOptions: { gateDb: this.gateDb, templates, record: false },
+        processorOptions: { gateDb: this.gateDb, templates },
       });
       node.port.onmessage = ({ data }) => this.onMessage(data);
       node.connect(ctx.destination); // keeps the node scheduled; it outputs silence

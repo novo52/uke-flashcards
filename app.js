@@ -68,7 +68,6 @@ $('micStop').addEventListener('click', () => mic.stop());
 cards = new CardMode({
   clock: () => mic.clock(),
   ensureAudio,
-  logEvent: () => {},
   setStatus,
   store: progressStore,
   els: {

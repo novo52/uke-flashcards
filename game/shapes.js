@@ -66,7 +66,7 @@ function defaultShape(name) {
   return cache.get(chord.name);
 }
 
-// Fingerings from chords-db (public/data/uke-fingerings.json): frets key -> fingers.
+// Fingerings from chords-db (data/uke-fingerings.json): frets key -> fingers.
 const fingerings = new Map();
 
 export function setFingerings(data) {

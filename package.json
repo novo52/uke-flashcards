@@ -5,6 +5,7 @@
   "scripts": {
     "start": "python3 -m http.server 8001 --bind 127.0.0.1",
     "test": "node --test test/",
-    "sync-from-uke": "sh tools/sync-from-uke.sh"
+    "fetch-fingerings": "node tools/fetch-fingerings.mjs",
+    "build-chord-chain": "node tools/build-chord-chain.mjs"
   }
 }
