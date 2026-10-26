@@ -1,0 +1,10 @@
+{
+  "name": "uke-flashcards",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8001 --bind 127.0.0.1",
+    "test": "node --test test/",
+    "sync-from-uke": "sh tools/sync-from-uke.sh"
+  }
+}

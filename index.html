@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uke Flashcards</title>
+<link rel="icon" href="data:,">
+<meta name="description" content="Learn ukulele chord shapes the way keybr.com teaches touch typing: play chord progressions from memory while the page listens.">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { overflow: hidden; }
+  #calLink.suggest { border-color: var(--target); color: var(--target); }
+  .kbPage { display: flex; flex-direction: column; flex: 1; min-height: 0; width: min(900px, 100% - 32px); margin: 0 auto; padding: 2vh 0 1vh; }
+  .kbHelpIcon { display: inline-block; width: 1.4em; height: 1.4em; line-height: 1.3em; text-align: center; border: 1px solid #6c6666; border-radius: 50%; color: #9f9999; cursor: help; }
+  .kbToolbar { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 14px; font-size: 13px; margin-bottom: 8px; }
+  .kbToolbar select, .kbToolbar button { padding: 2px 8px; font-size: 12px; }
+  .kbRow { display: flex; align-items: baseline; padding-top: 0.4rem; }
+  .kbRowName { width: 10rem; padding-right: 1rem; text-align: right; color: var(--kb-name); white-space: nowrap; flex: none; }
+  .kbRowValue { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 0 1px; color: var(--kb-text); }
+  .kbLabel { color: var(--kb-name); white-space: pre; }
+  .kbNum { font-family: 'Ubuntu Mono', Consolas, monospace; color: var(--kb-value); white-space: pre; font-size: 13px; }
+  .kbNum.more { color: var(--kb-more); }
+  .kbNum.less { color: var(--kb-less); }
+  .kbPair { margin-right: 12px; }
+  .kbKey { position: relative; display: inline-block; min-width: 1.5rem; height: 1.5rem; padding: 0 4px; line-height: calc(1.5rem - 2px); text-align: center; font-family: 'Ubuntu Mono', Consolas, monospace; font-size: 13px; color: var(--kb-tile-text); background: var(--kb-tile); outline: 1px solid transparent; }
+  .kbKey.excluded { color: #6c6666; background: linear-gradient(to top left, transparent calc(50% - 1px), #6c6666 50%, transparent calc(50% + 1px)), var(--kb-tile); }
+  .kbKey.focused { outline: 1px solid var(--kb-outline); z-index: 1; }
+  .kbKey.included { color: #e6e1e1; }
+  .kbGoal { display: inline-block; width: 20rem; max-width: 40vw; height: 0.8rem; border: 1px solid #555; margin-left: 1rem; }
+  .kbGoal span { display: block; height: 100%; background: #448154; }
+  .kbBoard { position: relative; flex: none; margin: 4vh 0 2vh; padding-left: min(10rem, 12vw); min-height: 2.8em; font-family: 'Ubuntu Mono', Consolas, monospace; font-size: clamp(18px, 4vh, 34px); line-height: 1.35; color: var(--kb-text); outline: none; cursor: pointer; }
+  .kbBoard.active { cursor: default; }
+  #cardsText { word-spacing: 0.1em; filter: blur(0); }
+  .kbBoard:not(.active) #cardsText { filter: blur(3px); opacity: 0.5; }
+  #cardsText .kbHit { color: var(--kb-hit); }
+  #cardsText .kbMiss { color: var(--kb-miss); }
+  #cardsText .kbCursor { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 3px; color: #e6e1e1; }
+  #cardsText .kbCursor.kbMiss { color: var(--kb-miss); }
+  #cardsText .kbSep { color: var(--kb-special); margin: 0 0.4em; }
+  #cardsOverlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Open Sans', 'Segoe UI', sans-serif; font-size: 1.1rem; color: var(--kb-name); }
+  .kbShape { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  #cardDiagram { flex: 1; min-height: 0; max-height: 300px; aspect-ratio: 17 / 21; background: #2b2b2b; border-radius: 6px; }
+  #cardDiagram.kbHidden { opacity: 0.35; }
+  #cardsHint { flex: none; min-height: 1.4em; color: var(--kb-name); }
+  @media (max-width: 640px) {
+    .kbRowName { width: 6.5rem; }
+    .kbBoard { padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+<header class="topBar">
+  <h1><a href="./">Uke Flashcards</a></h1>
+  <span id="micState">Microphone off</span>
+  <button id="micStop" hidden>Stop microphone</button>
+  <a id="calLink" class="button" href="calibrate.html" title="Teach the page your ukulele's sound, one note at a time">Calibrate</a>
+  <div id="account"></div>
+</header>
+<main class="kbPage">
+  <div class="kbToolbar">
+    <span class="kbHelpIcon" title="Play the underlined chord from memory. The shape stays hidden until you press Space, play a wrong chord, or wait 6 s, and the chord then counts as missed. A chord's speed is its change time from the chord before, in changes per minute (cpm). New chords unlock one at a time, once every unlocked chord has reached the target speed; the weakest chord is outlined under All chords and comes up in every progression. Esc stops; a lesson stopped part way is not counted.">?</span>
+    <label title="Listen for chords and run the lesson; unticking ends the lesson unrecorded, as Esc does"><input id="cardsListen" type="checkbox"> Listening</label>
+    <label title="Show each chord's shape while playing; otherwise it shows when asked for (Space), after a wrong chord, or after 6 s"><input id="cardsShapes" type="checkbox"> Show shapes</label>
+    <label title="Changes slower than the target come up to 3 times as often as songs make them"><input id="cardsFavourSlow" type="checkbox"> Favour slow changes</label>
+    <label title="Changes per minute every chord must reach before the next one unlocks">Target speed <select id="cardsTarget"><option value="4">15 cpm</option><option value="3">20 cpm</option><option value="2">30 cpm</option><option value="1.5">40 cpm</option><option value="1">60 cpm</option></select></label>
+    <button id="cardsReset" title="Start over; the current progress is kept as a backup">Reset</button>
+  </div>
+  <div class="kbRow"><span class="kbRowName">Metrics:</span><span class="kbRowValue" id="cardsMetrics"></span></div>
+  <div class="kbRow"><span class="kbRowName">All chords:</span><span class="kbRowValue" id="cardsKeys"></span></div>
+  <div class="kbRow"><span class="kbRowName">Current chord:</span><span class="kbRowValue" id="cardsCurrent"></span></div>
+  <div class="kbRow"><span class="kbRowName">Slowest changes:</span><span class="kbRowValue" id="cardsSlow"></span></div>
+  <div class="kbRow"><span class="kbRowName">Accuracy:</span><span class="kbRowValue" id="cardsStreak"></span></div>
+  <div class="kbRow"><span class="kbRowName">Daily goal:</span><span class="kbRowValue" id="cardsGoal"></span></div>
+  <div id="cardsBoard" class="kbBoard" tabindex="0"><div id="cardsText"></div><div id="cardsOverlay">Click or press Space to start listening</div></div>
+  <div class="kbShape"><span id="cardsHint"></span><canvas id="cardDiagram"></canvas></div>
+</main>
+<footer>
+  <a href="privacy.html">Privacy</a> · Progressions from <a href="https://huggingface.co/datasets/ailsntua/Chordonomicon">Chordonomicon</a> (CC BY-NC 4.0) · Fingerings from <a href="https://github.com/tombatossals/chords-db">chords-db</a> (MIT) · After <a href="https://www.keybr.com">keybr.com</a>
+</footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>

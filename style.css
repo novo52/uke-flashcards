@@ -1,0 +1,31 @@
+/* Shared by every page; styled after keybr.com's dark theme. */
+@font-face { font-family: 'Open Sans'; font-weight: 300 800; font-display: swap; src: url(fonts/open-sans-latin.woff2) format('woff2'); }
+@font-face { font-family: 'Ubuntu Mono'; font-weight: 400; font-display: swap; src: url(fonts/ubuntu-mono-latin.woff2) format('woff2'); }
+:root { --kb-bg: #333333; --kb-bar: #2d2d2d; --kb-line: #3d3d3d; --kb-text: #9f9999; --kb-name: #d2cfcf; --kb-value: #858080; --kb-hit: #747070; --kb-special: #696666; --kb-miss: #9b4545; --kb-tile: #404040; --kb-tile-text: #b9b5b5; --kb-outline: #8a8585; --kb-more: #2a7e21; --kb-less: #a1464e; --ok: #4dd68c; --warn: #e0a050; --target: #ffcc4d; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; }
+body { display: flex; flex-direction: column; background: var(--kb-bg); color: var(--kb-text); font-family: 'Open Sans', 'Segoe UI', sans-serif; font-size: clamp(11px, 1.6vh, 14px); }
+a { color: var(--kb-name); }
+button, select, .button { background: var(--kb-tile); color: var(--kb-tile-text); border: 1px solid #4d4d4d; border-radius: 2px; padding: 3px 10px; font: inherit; font-size: 13px; cursor: pointer; text-decoration: none; }
+button:disabled, select:disabled { opacity: 0.45; cursor: default; }
+button.primary, .button.primary { background: #448154; border-color: #448154; color: #f0f0f0; }
+label { display: inline-flex; gap: 6px; align-items: center; }
+
+.topBar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 8px 16px; background: var(--kb-bar); border-bottom: 1px solid var(--kb-line); font-size: 13px; }
+.topBar h1 { margin: 0 auto 0 0; font-size: 15px; font-weight: 600; }
+.topBar h1 a { color: var(--kb-name); text-decoration: none; }
+#micState { color: var(--kb-value); }
+#micState.on { color: var(--ok); }
+#account { position: relative; display: flex; align-items: center; gap: 8px; }
+#syncButton.warn { border-color: var(--warn); color: var(--warn); background: var(--kb-tile); }
+#accountMenu summary { list-style: none; cursor: pointer; padding: 2px 8px; border: 1px solid #4d4d4d; border-radius: 2px; background: var(--kb-tile); color: var(--kb-tile-text); }
+#accountMenu summary::-webkit-details-marker { display: none; }
+#accountMenu > div { position: absolute; right: 0; top: calc(100% + 6px); z-index: 10; display: flex; flex-direction: column; gap: 6px; padding: 12px; background: var(--kb-bar); border: 1px solid var(--kb-line); width: 280px; text-align: left; }
+#accountMenu p { margin: 0; }
+#accountEmail { color: var(--kb-name); font-weight: 600; overflow-wrap: anywhere; }
+#accountText { color: var(--kb-value); font-size: 12px; margin-bottom: 4px !important; }
+#accountMenu hr { width: 100%; border: none; border-top: 1px solid var(--kb-line); margin: 4px 0; }
+
+footer { flex: none; padding: 6px 16px; font-size: 12px; color: var(--kb-special); text-align: center; }
+footer a { color: var(--kb-value); }

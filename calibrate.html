@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calibrate · Uke Flashcards</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { font-size: 15px; }
+  main { flex: 1; width: min(1000px, 100% - 32px); margin: 0 auto; padding: 20px 0 24px; }
+  h2 { margin: 0 0 6px; color: var(--kb-name); font-weight: 600; font-size: 22px; }
+  .lead { margin: 0 0 16px; max-width: 75ch; }
+  .panel { background: #2f2f2f; border: 1px solid var(--kb-line); border-radius: 6px; padding: 16px 20px; }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 8px 0; }
+  .big { font-size: 15px; padding: 7px 16px; }
+  #meter { position: relative; width: min(320px, 100%); height: 12px; background: var(--kb-tile); border-radius: 6px; overflow: hidden; }
+  #meterFill { height: 100%; width: 0; background: var(--ok); transition: width 0.05s; }
+  #meterGate { position: absolute; top: 0; bottom: 0; width: 2px; background: #ff5c7a; }
+  #status { color: var(--kb-name); }
+  details summary { cursor: pointer; color: var(--kb-value); }
+  #howTo { margin: 12px 0 0; color: var(--kb-name); max-width: 75ch; }
+  #howTo.active { color: var(--target); }
+  #uke { display: block; width: 100%; height: auto; margin: 4px 0 0; }
+  .ukeString { stroke-linecap: round; }
+  .ukeStringName { fill: var(--kb-name); font: 700 17px 'Open Sans', sans-serif; }
+  .ukeFretNo { fill: var(--kb-value); font: 13px 'Open Sans', sans-serif; }
+  .ukeMarker circle { stroke: #8a8585; stroke-width: 1.5; transition: fill 0.15s; }
+  .ukeMarker text { font: 700 10px 'Open Sans', sans-serif; fill: #10301f; pointer-events: none; }
+</style>
+</head>
+<body>
+<header class="topBar">
+  <h1><a href="./">Uke Flashcards</a></h1>
+  <span id="micState">Microphone off</span>
+  <a class="button" href="./">Back to the flashcards</a>
+  <div id="account"></div>
+</header>
+<main>
+  <h2>Calibrate your ukulele</h2>
+  <p class="lead">Calibration learns your instrument's sound through your microphone, so chords are recognised more reliably. Tune your ukulele first. The calibration is saved in this browser and, when signed in, in your Google Drive.</p>
+  <section class="panel">
+    <div class="row">
+      <button id="micStart" class="primary">Start microphone</button>
+      <select id="device" disabled><option value="">Default microphone</option></select>
+      <div id="meter" title="Input level; the red mark is the level a note must reach"><div id="meterFill"></div><div id="meterGate"></div></div>
+    </div>
+    <details>
+      <summary>Too quiet or too noisy?</summary>
+      <p>Move the microphone closer to the sound hole, or choose another microphone. In a noisy room, raise the minimum level so only your notes pass the red mark.</p>
+      <label>Minimum level <input id="gate" type="range" min="-80" max="-20"> <span id="gateVal"></span></label>
+    </details>
+    <div class="row">
+      <button id="calibrate" class="big" disabled>Calibrate</button>
+      <button id="resetCal">Reset calibration</button>
+      <span id="status"></span>
+    </div>
+    <p id="howTo">Press <b>Calibrate</b>, then pluck single notes, two or three times each, letting them ring. A position fills as its pitch is learned (the same pitch on two strings fills both). Partial coverage is fine; unlearned notes keep the generic sound. Press <b>Finish calibration</b> when done.</p>
+    <svg id="uke" aria-label="A ukulele fretboard; each position fills as its pitch is learned"></svg>
+  </section>
+</main>
+<footer><a href="privacy.html">Privacy</a> · Sound is analysed in your browser and never leaves your device.</footer>
+<script type="module" src="calibrate.js"></script>
+</body>
+</html>
