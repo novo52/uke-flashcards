@@ -5,6 +5,15 @@ const storage = {
   set(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch { /* storage unavailable */ } },
 };
 
+// Asks the browser not to evict the site's storage when disk space runs low. Firefox asks the user, so this waits for the first save rather than running on load.
+let persistRequested = false;
+function requestPersistence() {
+  if (persistRequested) return;
+  persistRequested = true;
+  const s = globalThis.navigator?.storage;
+  s?.persisted?.().then((granted) => granted || s.persist()).catch(() => {});
+}
+
 // Which way a sync goes: 'pull' (Drive's copy replaces this device's), 'push', or null when neither supersedes the other.
 export function direction(local, remote, newer) {
   if (remote && (!local || newer(remote, local))) return 'pull';
@@ -29,6 +38,7 @@ export class SyncedDoc {
   save(data) {
     storage.set(this.key, data == null ? null : JSON.stringify(data));
     storage.set(this.dirtyKey, '1');
+    requestPersistence();
   }
 
   async sync(drive) {

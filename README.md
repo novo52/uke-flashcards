@@ -80,7 +80,7 @@ A strum's chord is read 150 ms after the attack, since fingers that land after t
 | Backup made by *Reset* or an import | `uke.flashcards.backup` | `flashcards-backup.json` | Later `backedUpAt` |
 | Calibration | `uke.templates.v1` | `calibration.json` | Later `savedAt` |
 
-Every save writes the browser copy at once and syncs 3 s later while a token is valid. Syncing also runs on load and when the tab becomes visible. Drive's progress replaces the browser's only while no lesson runs; a newer copy found during a lesson loads after listening stops. Calibration that arrives while the flashcards' microphone is on applies when it restarts; the calibration page takes it only while no calibration runs.
+Every save writes the browser copy at once and syncs 3 s later while a token is valid. The first save on a page asks the browser for persistent storage (`navigator.storage.persist()`), so low disk space does not evict it; Firefox asks the user. Syncing also runs on load and when the tab becomes visible. Drive's progress replaces the browser's only while no lesson runs; a newer copy found during a lesson loads after listening stops. Calibration that arrives while the flashcards' microphone is on applies when it restarts; the calibration page takes it only while no calibration runs.
 
 Progress from two devices does not merge: the copy with the higher revision replaces the other, so lessons played on a device that has not synced since the other's last lesson are lost.
 
