@@ -71,7 +71,7 @@ cards = new CardMode({
   setStatus,
   store: progressStore,
   els: {
-    listen: $('cardsListen'), shapes: $('cardsShapes'), favourSlow: $('cardsFavourSlow'), target: $('cardsTarget'), reset: $('cardsReset'),
+    listen: $('cardsListen'), shapes: $('cardsShapes'), favourSlow: $('cardsFavourSlow'), target: $('cardsTarget'), startChords: $('cardsStartChords'), goalMinutes: $('cardsGoalMinutes'), reset: $('cardsReset'),
     metrics: $('cardsMetrics'), keys: $('cardsKeys'), current: $('cardsCurrent'), slow: $('cardsSlow'), streak: $('cardsStreak'), goal: $('cardsGoal'),
     board: $('cardsBoard'), text: $('cardsText'), overlay: $('cardsOverlay'), diagram: $('cardDiagram'), hint: $('cardsHint'),
   },

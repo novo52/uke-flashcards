@@ -6,7 +6,7 @@
 //   filter (alpha 0.1, as keybr). A chord not played for days is taken to
 //   have slowed (keybr has no such decay; see `currentTime`). Confidence is
 //   the target time over the current time; 1 means at target speed.
-// - Chords unlock in CURRICULUM order, at least MIN_CHORDS of them: the next
+// - Chords unlock in CURRICULUM order, at least *Start with* of them: the next
 //   one only once every unlocked chord has reached confidence 1 at its best.
 //   An unlocked chord stays unlocked.
 // - The focused chord is the least confident unlocked one below 1 (a new chord
@@ -83,7 +83,8 @@ export function emptyProgress() {
     pairs: {}, // 'C>Am' -> recent change times
     lessons: [], // { at, cpm, accuracy, score, chords, seconds }
     daily: {}, // 'YYYY-MM-DD' -> seconds practised
-    settings: { showShapes: false, favourSlow: false, goalMinutes: 15 },
+    // startChords: chords unlocked from the start, at least MIN_CHORDS (keybr's alphabet size). goalMinutes: 0 turns the daily goal off.
+    settings: { showShapes: false, favourSlow: false, goalMinutes: 15, startChords: MIN_CHORDS },
   };
 }
 
@@ -146,10 +147,11 @@ export class Deck {
       const time = currentTime(chord, this.now());
       return { name, chord, time, confidence: this.confidence(time), bestConfidence: this.confidence(chord?.best), included: d.unlocked.includes(name), focused: false };
     });
+    const minChords = Math.max(MIN_CHORDS, d.settings?.startChords ?? 0);
     for (const key of keys) {
       if (key.included) continue;
       const included = keys.filter((k) => k.included);
-      if (included.length < MIN_CHORDS || (key.bestConfidence ?? 0) >= 1 || included.every((k) => (k.bestConfidence ?? 0) >= 1)) {
+      if (included.length < minChords || (key.bestConfidence ?? 0) >= 1 || included.every((k) => (k.bestConfidence ?? 0) >= 1)) {
         key.included = true;
         d.unlocked.push(key.name);
       }
@@ -373,6 +375,17 @@ export class CardMode {
       this.save();
       if (!this.run) this.newLesson();
     });
+    // Lowering it keeps the chords already unlocked.
+    els.startChords.addEventListener('change', () => {
+      this.deck.data.settings.startChords = Number(els.startChords.value);
+      this.save();
+      if (!this.run) this.newLesson();
+    });
+    els.goalMinutes.addEventListener('change', () => {
+      this.deck.data.settings.goalMinutes = Number(els.goalMinutes.value);
+      this.save();
+      this.showIndicators();
+    });
     els.reset.addEventListener('click', () => {
       if (!confirm('Start the flashcards over? The current progress is kept as a backup.')) return;
       this.stop();
@@ -397,6 +410,8 @@ export class CardMode {
     this.els.target.value = String(this.deck.data.target);
     this.els.shapes.checked = this.deck.data.settings.showShapes;
     this.els.favourSlow.checked = !!this.deck.data.settings.favourSlow;
+    this.els.startChords.value = String(Math.max(MIN_CHORDS, this.deck.data.settings.startChords ?? 0));
+    this.els.goalMinutes.value = String(this.deck.data.settings.goalMinutes ?? 15);
   }
 
   save(options) {
@@ -612,8 +627,12 @@ export class CardMode {
     const { run, best } = deck.streak();
     els.streak.replaceChildren(label(best ? `${run} lessons in a row at 100% (best ${best}).` : 'No accuracy streaks.'));
 
-    const goal = deck.data.settings.goalMinutes;
+    const goal = deck.data.settings.goalMinutes ?? 15;
     const done = deck.practisedToday() / 60;
+    if (!goal) {
+      els.goal.replaceChildren(label(`Off · ${Math.round(done)} minutes today.`));
+      return;
+    }
     const bar = document.createElement('span');
     bar.className = 'kbGoal';
     const fill = document.createElement('span');

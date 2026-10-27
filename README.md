@@ -17,6 +17,7 @@ Open it in a desktop browser on the machine with the microphone. Under WSL, use 
 
 - **Flashcards** (`index.html`): click the line or press Space to start listening, then play the underlined chord from memory. Esc stops; a lesson stopped part way is not counted.
 - **Calibrate** (`calibrate.html`): start the microphone, press *Calibrate*, and pluck single notes two or three times each, letting them ring. Each position on the drawn ukulele fills as its pitch is learned (the same pitch on two strings fills both); notes skipped keep the generic sound. *Finish calibration*, or stopping the microphone, saves it.
+- **Progress** (`progress.html`): practice time, lessons, top and average speed and accuracy; speed and accuracy per lesson with a smoothness slider; each chord's smoothed speed and a table of every unlocked chord; a six-month practice calendar; every lesson as a table.
 - **Sync** and the **⋯** menu in the top bar: sign in with Google to keep a copy in Drive; the menu disconnects, deletes the Drive copy, and exports or imports all data as JSON.
 
 ## Flashcard rules
@@ -32,7 +33,7 @@ Rules are in `game/cards.js`:
 | The shape stays hidden until Space, a wrong chord, or 6 s; the chord then counts as a miss and its time is left out. A strum heard as the chord just played, or within 0.25 s of it, is ignored. A chord never played before shows its shape. | Retrieval practice with corrective feedback (Roediger & Karpicke 2006) |
 | A chord not played for a while is taken to have slowed: its time grows by up to half, about two-thirds of that after 14 days. The first lesson after a break moves the smoothed time further towards what is played. | Not in keybr |
 
-*Metrics* shows the last lesson's speed in changes per minute (cpm), accuracy and score (speed × chords ÷ (misses + 1), as keybr's), each against the average of earlier lessons. *Target speed* sets the speed every chord must reach (30 cpm by default).
+*Metrics* shows the last lesson's speed in changes per minute (cpm), accuracy and score (speed × chords ÷ (misses + 1), as keybr's), each against the average of earlier lessons. *Target speed* sets the speed every chord must reach (30 cpm by default). *Start with* unlocks more chords from the start (keybr's alphabet size); lowering it keeps the chords already unlocked. *Daily goal* sets the minutes to practise each day (15 by default, or off).
 
 The chain is `data/chord-chain.json`, built by `npm run build-chord-chain` from the [Chordonomicon CSV](https://huggingface.co/datasets/ailsntua/Chordonomicon) (CC BY-NC 4.0: Kantarelis et al., arXiv:2410.22046). Its vocabulary is the flashcard `CURRICULUM`, so rebuild it after changing that list. Fingerings in diagrams come from [chords-db](https://github.com/tombatossals/chords-db) (MIT), stored in `data/uke-fingerings.json`; voicings it does not list get an estimated fingering.
 
@@ -56,6 +57,7 @@ A strum's chord is read 150 ms after the attack, since fingers that land after t
 |---|---|
 | `index.html`, `app.js` | The flashcards |
 | `calibrate.html`, `calibrate.js` | Calibration |
+| `progress.html`, `progress.js` | Progress charts, after keybr's profile page |
 | `ukulele.js` | The drawn ukulele (SVG), strings in tablature order: A on top |
 | `mic.js` | Microphone and analyzer worklet; the chosen microphone and minimum level are kept in `uke.audio.v1` |
 | `analyzer-worklet.js`, `dsp/` | Detection |

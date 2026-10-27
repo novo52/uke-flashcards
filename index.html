@@ -54,6 +54,7 @@
   <h1><a href="./">Uke Flashcards</a></h1>
   <span id="micState">Microphone off</span>
   <button id="micStop" hidden>Stop microphone</button>
+  <a class="button" href="progress.html" title="Charts of your speed, accuracy and practice over time">Progress</a>
   <a id="calLink" class="button" href="calibrate.html" title="Teach the page your ukulele's sound, one note at a time">Calibrate</a>
   <div id="account"></div>
 </header>
@@ -64,6 +65,8 @@
     <label title="Show each chord's shape while playing; otherwise it shows when asked for (Space), after a wrong chord, or after 6 s"><input id="cardsShapes" type="checkbox"> Show shapes</label>
     <label title="Changes slower than the target come up to 3 times as often as songs make them"><input id="cardsFavourSlow" type="checkbox"> Favour slow changes</label>
     <label title="Changes per minute every chord must reach before the next one unlocks">Target speed <select id="cardsTarget"><option value="4">15 cpm</option><option value="3">20 cpm</option><option value="2">30 cpm</option><option value="1.5">40 cpm</option><option value="1">60 cpm</option></select></label>
+    <label title="Chords unlocked from the start, for players who already know some; lowering it keeps the chords unlocked">Start with <select id="cardsStartChords"><option value="2">2 chords</option><option value="4">4 chords</option><option value="6">6 chords</option><option value="8">8 chords</option><option value="12">12 chords</option><option value="26">all chords</option></select></label>
+    <label title="Minutes of practice to aim for each day">Daily goal <select id="cardsGoalMinutes"><option value="0">off</option><option value="5">5 min</option><option value="10">10 min</option><option value="15">15 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select></label>
     <button id="cardsReset" title="Start over; the current progress is kept as a backup">Reset</button>
   </div>
   <div class="kbRow"><span class="kbRowName">Metrics:</span><span class="kbRowValue" id="cardsMetrics"></span></div>

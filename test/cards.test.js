@@ -23,6 +23,14 @@ test('flashcards start with C and Am, focused on the first', () => {
   assert.equal(keys.find((k) => k.focused).name, 'C');
 });
 
+test('flashcards can start with more chords, and keep them when the setting is lowered', () => {
+  const deck = new Deck(null, { random: rng(1) });
+  deck.data.settings.startChords = 6;
+  assert.deepEqual(deck.keys().filter((k) => k.included).map((k) => k.name), CURRICULUM.slice(0, 6));
+  deck.data.settings.startChords = 2;
+  assert.equal(deck.keys().filter((k) => k.included).length, 6);
+});
+
 test('flashcard lessons: every progression holds the focused chord, no chord twice running', () => {
   const deck = new Deck(null, { random: rng(2) });
   for (let i = 0; i < 30; i++) {

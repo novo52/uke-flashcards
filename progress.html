@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Progress · Uke Flashcards</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+<style>
+  main { flex: 1; overflow-y: auto; overflow-anchor: none; }
+  .page { width: min(900px, 100% - 32px); margin: 0 auto; padding: 16px 0 32px; }
+  h2 { color: var(--kb-name); font-size: 15px; font-weight: 600; margin: 28px 0 4px; }
+  .sub { margin: 0 0 8px; font-size: 12px; color: var(--kb-value); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+  .tile { background: var(--kb-bar); border: 1px solid var(--kb-line); padding: 8px 10px; }
+  .tile span { display: block; font-size: 12px; color: var(--kb-value); }
+  .tile b { display: block; font-size: 20px; font-weight: 600; color: var(--kb-name); }
+  .controls { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: flex-end; font-size: 12px; margin: 8px 0; }
+  .controls select { padding: 2px 8px; font-size: 12px; }
+  .chart { position: relative; }
+  .chart svg { display: block; width: 100%; overflow: visible; }
+  .chart text { fill: var(--kb-value); font-size: 11px; font-family: 'Ubuntu Mono', Consolas, monospace; }
+  .chart .grid { stroke: var(--kb-line); stroke-width: 1; }
+  .chart .ref { stroke: var(--kb-text); stroke-width: 1; }
+  .chart .ref-label { fill: var(--kb-text); }
+  .chart .raw { fill: var(--series); opacity: 0.35; }
+  .chart .line { fill: none; stroke: var(--series); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .chart .end-label { fill: var(--kb-name); }
+  .chart .cross { stroke: var(--kb-outline); stroke-width: 1; }
+  .chart .hot { fill: var(--series); stroke: var(--kb-bg); stroke-width: 2; }
+  .tip { position: absolute; pointer-events: none; background: var(--kb-bar); border: 1px solid var(--kb-line); padding: 4px 8px; font-size: 12px; color: var(--kb-name); white-space: nowrap; z-index: 2; }
+  .tip span { color: var(--kb-value); }
+  .cal { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; }
+  .cal-legend { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--kb-value); }
+  .cal-legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th, td { text-align: right; padding: 4px 8px; border-bottom: 1px solid var(--kb-line); font-variant-numeric: tabular-nums; }
+  th { color: var(--kb-name); font-weight: 600; }
+  th:first-child, td:first-child { text-align: left; }
+  td { color: var(--kb-text); }
+  details summary { cursor: pointer; color: var(--kb-name); font-size: 12px; margin: 8px 0; }
+  .empty { color: var(--kb-name); margin-top: 24px; }
+  :root { --series: #38a96c; }
+  input[type=range] { accent-color: var(--series); }
+</style>
+</head>
+<body>
+<header class="topBar">
+  <h1><a href="./">Uke Flashcards</a></h1>
+  <a class="button" href="./">Back to the flashcards</a>
+  <div id="account"></div>
+</header>
+<main>
+<div class="page">
+  <p id="status" class="sub"></p>
+  <p id="empty" class="empty" hidden>No lessons yet. Play one on the <a href="./">flashcards</a> and your progress shows here.</p>
+  <div id="content" hidden>
+    <div class="tiles" id="summary"></div>
+
+    <div class="controls">
+      <label title="Averages each point with the lessons before it, to show the long-term trend">Smoothness <input id="smooth" type="range" min="0" max="0.95" step="0.05" value="0.7"></label>
+    </div>
+
+    <h2>Speed per lesson</h2>
+    <p class="sub">Average change speed in each lesson, in changes per minute (cpm). Dots are single lessons; the line is smoothed.</p>
+    <div class="chart" id="speedChart"></div>
+
+    <h2>Accuracy per lesson</h2>
+    <p class="sub">Share of chords played without the shape being shown.</p>
+    <div class="chart" id="accuracyChart"></div>
+
+    <h2>Chord speed</h2>
+    <div class="controls"><label>Chord <select id="chordPick"></select></label></div>
+    <p class="sub">The chord's smoothed change speed after each lesson it was played in; dots are that lesson's average.</p>
+    <div class="chart" id="chordChart"></div>
+    <table id="chordTable"></table>
+
+    <h2>Practice calendar</h2>
+    <p class="sub">Minutes practised each day over the last six months.</p>
+    <div class="cal"><div class="chart" id="calendar"></div><div class="cal-legend" id="calLegend"></div></div>
+
+    <details>
+      <summary>Every lesson as a table</summary>
+      <table id="lessonTable"></table>
+    </details>
+  </div>
+</div>
+</main>
+<footer><a href="privacy.html">Privacy</a> · Your progress stays in this browser and, if you sync, in your Google Drive.</footer>
+<script type="module" src="progress.js"></script>
+</body>
+</html>
