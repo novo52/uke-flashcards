@@ -5,6 +5,7 @@ import { allDocs, exportData, parseImport, applyImport } from './documents.js';
 const CLIENT_ID = '159556833977-69oipcnih4ovl5ug8pl4vg100i2cnlg1.apps.googleusercontent.com';
 const SYNC_DELAY_MS = 3000; // after a save, so a burst of saves makes one upload
 const WAITING_RETRY_MS = 30_000;
+const SIGNED_IN_LABELS = ['Sync', 'Syncing…', 'Saving…', 'Synced'];
 
 const MARKUP = `
   <button id="syncButton" class="primary">Sync with Google</button>
@@ -93,7 +94,9 @@ export function setupAccount({ setStatus = () => {} } = {}) {
     else if (waiting) [label, text] = ['Synced', 'Newer progress on Google Drive loads when you stop listening.'];
     else if (dirty) [label, text] = ['Saving…', 'Saving to Google Drive…'];
     else [label, text] = ['Synced', `Synced with Google Drive${lastSync ? ` at ${new Date(lastSync).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : ''}.`];
-    ui.sync.textContent = label;
+    // Every signed-in label sits in the button, hidden but the shown one, so its width holds while the label changes.
+    const labels = email ? SIGNED_IN_LABELS : [label];
+    ui.sync.replaceChildren(...labels.map((l) => Object.assign(document.createElement('span'), { textContent: l, className: l === label ? '' : 'off' })));
     ui.sync.title = text;
     // Signed in and up to date: nothing to click.
     ui.sync.classList.toggle('primary', !drive.connected || !!error);
