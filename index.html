@@ -39,7 +39,7 @@
   .kbKey.included { color: #e6e1e1; }
   .kbGoal { display: inline-block; width: 20rem; max-width: 40vw; height: 0.8rem; border: 1px solid #555; margin-left: 1rem; }
   .kbGoal span { display: block; height: 100%; background: #448154; }
-  .kbBoard { position: relative; flex: none; margin: 4vh 0 2vh; padding-left: min(10rem, 12vw); min-height: 2.8em; font-family: 'Ubuntu Mono', Consolas, monospace; font-size: clamp(18px, 4vh, 34px); line-height: 1.35; color: var(--kb-text); outline: none; cursor: pointer; }
+  .kbBoard { position: relative; flex: none; margin: 4vh 0 2vh; min-height: 2.8em; text-align: center; font-family: 'Ubuntu Mono', Consolas, monospace; font-size: clamp(18px, 4vh, 34px); line-height: 1.35; color: var(--kb-text); outline: none; cursor: pointer; }
   .kbBoard.active { cursor: default; }
   #cardsText { word-spacing: 0.1em; filter: blur(0); }
   .kbBoard:not(.active) #cardsText { filter: blur(3px); opacity: 0.5; }
@@ -47,7 +47,8 @@
   #cardsText .kbMiss { color: var(--kb-miss); }
   #cardsText .kbCursor { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 3px; color: #e6e1e1; }
   #cardsText .kbCursor.kbMiss { color: var(--kb-miss); }
-  #cardsText .kbSep { color: var(--kb-special); margin: 0 0.4em; }
+  #cardsText .kbSep { color: var(--kb-special); }
+  #cardsText .kbPhrase { white-space: nowrap; }
   #cardsOverlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Open Sans', 'Segoe UI', sans-serif; font-size: 1.1rem; color: var(--kb-name); }
   .kbShape { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
   #cardDiagram { flex: 1; min-height: 0; max-height: 300px; aspect-ratio: 17 / 21; background: #2b2b2b; border-radius: 6px; }
@@ -55,7 +56,6 @@
   #cardsHint { flex: none; min-height: 1.4em; color: var(--kb-name); }
   @media (max-width: 640px) {
     .kbRowName { width: 6.5rem; }
-    .kbBoard { padding-left: 0; }
   }
 </style>
 </head>

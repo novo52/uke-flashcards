@@ -549,14 +549,21 @@ export class CardMode {
     const spans = [];
     let i = 0;
     this.lesson.progressions.forEach((p, pi) => {
-      if (pi) spans.push(Object.assign(document.createElement('span'), { className: 'kbSep', textContent: '·' }));
+      // A progression stays on one line, with the separator after it; lines break between progressions.
+      if (pi) {
+        spans.at(-1).append(' ', Object.assign(document.createElement('span'), { className: 'kbSep', textContent: '·' }));
+        spans.push(document.createTextNode(' '));
+      }
+      const phrase = document.createElement('span');
+      phrase.className = 'kbPhrase';
+      spans.push(phrase);
       p.forEach((name, ci) => {
         const span = document.createElement('span');
         span.textContent = name;
         const step = r?.steps[i];
         span.className = step ? (step.miss ? 'kbMiss' : 'kbHit') : r && i === r.index ? `kbCursor${r.missed ? ' kbMiss' : ''}` : '';
-        spans.push(span);
-        if (ci < p.length - 1) spans.push(document.createTextNode(' '));
+        phrase.append(span);
+        if (ci < p.length - 1) phrase.append(' ');
         i++;
       });
     });
