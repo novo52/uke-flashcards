@@ -7,10 +7,20 @@
 <title>Uke Flashcards</title>
 <link rel="icon" href="data:,">
 <meta name="description" content="Learn ukulele chord shapes the way keybr.com teaches touch typing: play chord progressions from memory while the page listens.">
+<link rel="preload" href="fonts/open-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ubuntu-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<script>
+  // Set before the first paint so the Calibrate button does not change width once app.js runs.
+  try { if (JSON.parse(localStorage.getItem('uke.templates.v1'))?.templates) document.documentElement.classList.add('calibrated'); } catch {}
+</script>
 <style>
   body { overflow: hidden; }
-  #calLink.suggest { border-color: var(--target); color: var(--target); }
+  html:not(.calibrated) #calLink { border-color: var(--target); color: var(--target); }
+  html.calibrated .calHint { display: none; }
+  /* What app.js fills in stays hidden until the progress has loaded (html.ready), so nothing moves as it appears; after 1 s it shows regardless. */
+  html:not(.ready) .topBar > :not(h1), html:not(.ready) .kbPage { visibility: hidden; animation: kbReveal 0s 1s forwards; }
+  @keyframes kbReveal { to { visibility: visible; } }
   .kbPage { display: flex; flex-direction: column; flex: 1; min-height: 0; width: min(900px, 100% - 32px); margin: 0 auto; padding: 2vh 0 1vh; }
   .kbHelpIcon { display: inline-block; width: 1.4em; height: 1.4em; line-height: 1.3em; text-align: center; border: 1px solid #6c6666; border-radius: 50%; color: #9f9999; cursor: help; }
   .kbToolbar { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 14px; font-size: 13px; margin-bottom: 8px; }
@@ -55,7 +65,7 @@
   <span id="micState">Microphone off</span>
   <button id="micStop" hidden>Stop microphone</button>
   <a class="button" href="progress.html" title="Charts of your speed, accuracy and practice over time">Progress</a>
-  <a id="calLink" class="button" href="calibrate.html" title="Teach the page your ukulele's sound, one note at a time">Calibrate</a>
+  <a id="calLink" class="button" href="calibrate.html" title="Teach the page your ukulele's sound, one note at a time">Calibrate<span class="calHint"> (recommended)</span></a>
   <div id="account"></div>
 </header>
 <main class="kbPage">

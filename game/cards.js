@@ -347,7 +347,13 @@ export class CardMode {
       .then((res) => res.json())
       .then(setChordChain)
       .catch(() => setStatus('Flashcards: no chord table; progressions are random.'));
-    this.ready = Promise.all([store.load(), chain]).then(([data]) => this.load(data));
+    // The indicators show as soon as the progress loads; the lesson waits for the chord table as well.
+    this.shown = store.load().then((data) => {
+      if (data) this.deck = new Deck(data);
+      this.applySettings();
+      this.showIndicators();
+    });
+    this.ready = Promise.all([this.shown, chain]).then(() => this.load(null));
     this.run = null; // { lesson, chords, index, steps, since, start, revealed, missed, pending }
     // The diagram scales with the window.
     new ResizeObserver(() => this.showShape()).observe(els.diagram);

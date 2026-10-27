@@ -58,9 +58,7 @@ function setStatus(text) {
 }
 
 function showCalibrated() {
-  const calibrated = !!templates();
-  $('calLink').textContent = calibrated ? 'Calibrate' : 'Calibrate (recommended)';
-  $('calLink').classList.toggle('suggest', !calibrated);
+  document.documentElement.classList.toggle('calibrated', !!templates());
 }
 
 $('micStop').addEventListener('click', () => mic.stop());
@@ -91,6 +89,7 @@ function render() {
 }
 
 showCalibrated();
+cards.shown.then(() => document.documentElement.classList.add('ready'));
 cards.ready.then(() => {
   cardsReady = true;
   account.start();
