@@ -84,7 +84,7 @@ Every save writes the browser copy at once and syncs 3 s later while a token is 
 
 Progress from two devices does not merge: the copy with the higher revision replaces the other, so lessons played on a device that has not synced since the other's last lesson are lost.
 
-Google's script loads only when the pointer reaches the Sync button or, for a returning user, on load. The access token lasts an hour and is kept in `sessionStorage` until it expires; after that one click renews it (`prompt: ''` with the remembered account as `login_hint`).
+Google's script loads only when *Sync with Google* is clicked or, for a returning user, on load. If it takes longer than the browser allows a click to open a popup, the button asks for a second click. The access token lasts an hour and is kept in `sessionStorage` until it expires; after that one click renews it (`prompt: ''` with the remembered account as `login_hint`).
 
 Export writes `{ app: 'uke-flashcards', exportedAt, flashcards, calibration }`. Import takes that, or a bare progress file (format version 1 or 2).
 

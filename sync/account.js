@@ -75,6 +75,7 @@ export function setupAccount({ setStatus = () => {} } = {}) {
       .then(syncAll)
       .catch((err) => {
         error = err.message;
+        setStatus(err.message);
         render();
       });
   }
@@ -85,8 +86,8 @@ export function setupAccount({ setStatus = () => {} } = {}) {
     const waiting = allDocs.some((d) => d.waiting);
     let label;
     let text;
-    if (!email) [label, text] = ['Sync with Google', 'Your data is saved in this browser. Sync with Google to keep a copy in your Google Drive.'];
-    else if (error) [label, text] = ['Sync', error];
+    if (error) [label, text] = [email ? 'Sync' : 'Sync with Google', error];
+    else if (!email) [label, text] = ['Sync with Google', 'Your data is saved in this browser. Sync with Google to keep a copy in your Google Drive.'];
     else if (!drive.connected) [label, text] = ['Sync', dirty ? 'Changes not synced yet.' : 'Click Sync to reconnect.'];
     else if (syncing) [label, text] = ['Syncing…', 'Syncing with Google Drive…'];
     else if (waiting) [label, text] = ['Synced', 'Newer progress on Google Drive loads when you stop listening.'];
@@ -103,9 +104,8 @@ export function setupAccount({ setStatus = () => {} } = {}) {
     ui.deleteRemote.hidden = !email;
   }
 
+  // A visitor who has not signed in contacts Google only on this click; if loading the script outlasts the click's popup allowance, the error asks for a second click.
   ui.sync.addEventListener('click', connectAndSync);
-  // Loading Google's script when the pointer heads for the button lets the click open the popup at once.
-  for (const type of ['pointerenter', 'focus', 'touchstart']) ui.sync.addEventListener(type, () => drive.prepare().catch(() => {}), { once: true, passive: true });
   ui.disconnect.addEventListener('click', async () => {
     ui.menu.open = false;
     await drive.disconnect();
@@ -126,6 +126,7 @@ export function setupAccount({ setStatus = () => {} } = {}) {
       })
       .catch((err) => {
         error = err.message;
+        setStatus(err.message);
         render();
       });
   });

@@ -33,7 +33,7 @@ export class Drive {
   get email() { return local.get(EMAIL_KEY); }
   get connected() { return !!this.token && Date.now() < this.token.expiresAt - EXPIRY_MARGIN_MS; }
 
-  // Loads Google's script ahead of a click, so the click can open the popup at once.
+  // Loads Google's script. A returning user's page calls this on load, so the click can open the popup at once.
   prepare() {
     this.gis ??= new Promise((resolve, reject) => {
       const s = document.createElement('script');
